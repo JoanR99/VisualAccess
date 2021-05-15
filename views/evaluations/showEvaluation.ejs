@@ -1,0 +1,111 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+  <div class="col-6">
+    <h1 class="text-center">Resultados de evaluación</h1>
+    <main class="d-flex flex-wrap justify-content-evenly align-items-center mb-2">
+      <div id="graficos" class="p-0 m-0">
+        <div class="arco"><%= evaluation.result.globalScore %>%</div>
+      </div>
+      <div>
+        <h2 class="text-center"><%= evaluation.result.accessibilityLevel %> </h2>
+      </div>
+    </main>
+
+    <section class="mb-5">
+    <div class="card text-dark bg-orange-strong mb-2">
+      <div class="card-body">
+        <h5 class="card-title text-light1">Resumen</h5>
+        <ul class="list-group list-group-flush bg-gray-light">
+          
+          <li class="list-group-item bg-gray-light"><%= evaluation.profile %> </li>
+         
+          <li class="list-group-item bg-gray-light">Evaluación realizada a la página <%= evaluation.page.url %></li>
+          <li class="list-group-item bg-gray-light">
+            <%= evaluation.evaluationDate %>
+          </li>
+
+          <li class="list-group-item bg-gray-light">
+            <%= evaluation.result.barrierCount %> barrera(s) evaluada(s)
+          </li>
+          <li class="list-group-item bg-gray-light">
+            <%= evaluation.result.globalElementCount %> elemento(s) evaluado(s)
+          </li>
+          <li class="list-group-item bg-gray-light">
+            <%= evaluation.result.globalErrorCount %> error(es) encontrado(s)
+          </li>
+        </ul>
+      </div>
+    </div>
+    <a href="<%= evaluation.page.url %>" target="_blank" class="btn btn-primary">Visitar web</a>
+  </section>
+
+    <% if(currentUser) { %> 
+
+    <section>
+      <h3 class="text-center mb-3">Detalles</h3>
+
+    <% for(let i = 0; i < evaluation.result.specificResults.length; i++) { %>
+    <%if(evaluation.result.specificResults[i].score == null) continue; %>
+    <%if(evaluation.result.specificResults[i].element.errorCount > 0){ %>
+    <div class="card text-dark bg-red-light mb-3">
+      <% } else { %>
+      <div class="card text-dark bg-green-light mb-3">
+        <% } %>
+        <div class="card-body">
+          <h5 class="card-title text-light1">
+            <%=
+            barrierData[evaluation.result.specificResults[i].test].barrierName%>
+          </h5>
+          <ul class="list-group list-group-flush bg-gray-light">
+            <li class="list-group-item bg-gray-light">
+              <%= evaluation.result.specificResults[i].element.elementCount %>
+              elemento(s) evaluado(s)
+            </li>
+            <% if (evaluation.result.specificResults[i].element.errorCount > 0)
+            { %> 
+            <li class="list-group-item bg-gray-light">
+              <% if (evaluation.result.specificResults[i].test == 'H25' ||
+            evaluation.result.specificResults[i].test == 'H57') { %>
+              <%=
+              barrierData[evaluation.result.specificResults[i].test].description
+              %>
+              <% } else{ %>
+                <%= evaluation.result.specificResults[i].element.errorCount %> <%=
+              barrierData[evaluation.result.specificResults[i].test].description
+              %>
+              <% } %> 
+            </li>
+            
+            <% } else { %>
+            <li class="list-group-item bg-gray-light">No se encontraron errores.</li>
+            <% } %>
+            <li class="list-group-item bg-gray-light">
+              <p>Criterios relacionados:</p>
+              <ul>
+                <% for(let j = 0; j <
+                barrierData[evaluation.result.specificResults[i].test].successCriterion.length;
+                j++ ) { %>
+                <li>
+                  <a
+                    href="<%= barrierData[evaluation.result.specificResults[i].test].successCriterion[j].link %>" target="_blank"
+                    ><%=
+                    barrierData[evaluation.result.specificResults[i].test].successCriterion[j].name
+                    %>
+                  </a>
+                </li>
+                <% } %>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <% } %>
+    </section>
+
+    <% } %>
+    </div>
+  </div>
+
+  <script src="/scripts/animateGrafic.js"></script>
+</div>

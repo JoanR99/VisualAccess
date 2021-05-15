@@ -1,0 +1,45 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+  <h1 class="text-center">Nueva Evaluación</h1>
+  <div class="col-md-6 offset-md-3">
+    <form action="/evaluations" method="POST">
+      <div class="mb-3">
+        <label class="form-label" for="url">URL</label>
+        <input class="form-control" type="url" name="url" id="url" required />
+      </div>
+
+      <fieldset class="mb-3">
+        <p class="form-label">Perfil de discapacidad</p>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="disabilityProfile"
+            id="totalBlind"
+            value="totalBlind"
+            checked
+          />
+          <label class="form-check-label" for="totalBlind">
+            Ceguera total
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            name="disabilityProfile"
+            id="partialBlind"
+            value="partialBlind"
+          />
+          <label class="form-check-label" for="partialBlind">
+            Ceguera parcial
+          </label>
+        </div>
+      </fieldset>
+      <div class="mb-3">
+        <button class="btn btn-success">Evaluar</button>
+      </div>
+    </form>
+  </div>
+</div>
