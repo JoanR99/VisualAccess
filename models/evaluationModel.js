@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const formatDate = require('../helpers/formatDate');
+const formatDate = require('../utils/formatDate');
+const Result = require('./resultModel');
 
 const evaluationSchema = new Schema({
   page: {
@@ -11,6 +12,10 @@ const evaluationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Result',
   },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
   disabilityProfile: {
     type: String,
   },
@@ -19,14 +24,22 @@ const evaluationSchema = new Schema({
 
 evaluationSchema.virtual('profile').get(function () {
   if (this.disabilityProfile == 'totalBlind') {
-    return 'Evaluación realizada para el perfil Ceguera Total';
+    return 'Ceguera Total';
   } else {
-    return 'Evaluación realizada para el perfil Ceguera Parcial';
+    return 'Ceguera Parcial';
   }
 });
 
 evaluationSchema.virtual('evaluationDate').get(function () {
   return formatDate(this.date);
+});
+
+evaluationSchema.post('findOneAndDelete', async function (doc) {
+  if (doc) {
+    await Result.deleteOne({
+      _id: doc.result,
+    });
+  }
 });
 
 module.exports = mongoose.model('Evaluation', evaluationSchema);

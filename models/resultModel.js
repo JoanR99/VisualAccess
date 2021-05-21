@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const defineAccessibilityLevel = require('../helpers/defineAccessibilityLevel');
+const defineAccessibilityLevel = require('../utils/defineAccessibilityLevel');
 
 const specificResultSchema = new Schema({
   test: {

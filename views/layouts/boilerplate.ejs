@@ -18,7 +18,9 @@
   </head>
   <body class="d-flex flex-column vh-100 bg-gray-light">
     <%- include('../partials/navbar') %>
-    <main class="container m-t"><%- body %></main>
+    <main class="container m-t">
+      <%- include('../partials/flash') %><%- body %>
+    </main>
     <%- include('../partials/footer') %>
 
     <!-- JavaScript Bundle with Popper -->

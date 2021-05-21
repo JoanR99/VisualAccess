@@ -52,7 +52,7 @@ const formatDate = (date) => {
       break;
   }
 
-  return `Evaluación realizada el ${day} de ${month} de ${year}`;
+  return `${day} de ${month} de ${year}`;
 };
 
 module.exports = formatDate;

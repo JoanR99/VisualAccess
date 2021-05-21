@@ -1,0 +1,23 @@
+<% layout('layouts/boilerplate') %>
+
+<h1>Historial</h1>
+
+<main class="row d-flex flex-wrap justify-content-around">
+  <% for(let evaluation of evaluations){ %>
+  <div class="card mb-3 col-3 m-2 text-center">
+    <div class="card-body">
+      <h5 class="card-title"><%= evaluation.page.url %></h5>
+      <p class="card-title">Nivel: <%= evaluation.result.globalScore %>%</p>
+      <p class="card-title">
+        <small class="text-muted"><%= evaluation.profile %></small>
+      </p>
+      <p class="card-title">
+        <small class="text-muted"><%= evaluation.evaluationDate %></small>
+      </p>
+      <a href="/evaluation/<%= evaluation._id %> " class="btn btn-primary">
+        Ver evaluación
+      </a>
+    </div>
+  </div>
+  <% } %>
+</main>
