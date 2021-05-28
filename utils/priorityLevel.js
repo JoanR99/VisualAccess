@@ -23,7 +23,7 @@ const priorityLevel = {
     totalBlind: 3,
     partialBlind: 1,
   },
-  H44: {
+  H46: {
     totalBlind: 1,
     partialBlind: 1,
   },
@@ -40,10 +40,6 @@ const priorityLevel = {
     partialBlind: 1,
   },
   H93: {
-    totalBlind: 3,
-    partialBlind: 1,
-  },
-  H95: {
     totalBlind: 3,
     partialBlind: 1,
   },

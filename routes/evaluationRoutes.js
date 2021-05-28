@@ -4,7 +4,7 @@ const evaluation = require('../controllers/evaluationControllers');
 const catchAsync = require('../utils/catchAsync');
 const { isLoggedIn, isAuthor, pageExists } = require('../middleware');
 
-router.route('/').post(catchAsync(evaluation.createEvaluation));
+router.post('/', catchAsync(evaluation.createEvaluation));
 
 router.get('/new', evaluation.renderNewForm);
 

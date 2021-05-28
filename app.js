@@ -16,6 +16,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const secret = 'thisshouldbeabettersecret';
 const MongoDBStore = require('connect-mongo');
+const reviewRoutes = require('./routes/reviewRoutes');
 
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
@@ -119,14 +120,14 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
-  console.log(req.user);
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   next();
 });
 
-app.use('/', userRoutes);
 app.use('/evaluation', evaluationRoutes);
+app.use('/', userRoutes);
+app.use('/page/:id/review', reviewRoutes);
 
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');

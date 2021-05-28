@@ -1,55 +1,64 @@
-const request = require('request-promise');
-const scanPage = require('./scanPage');
+const getPage = require('./getPage');
+const applyTests = require('./applyTests');
 const barrierEvaluation = require('./barrierEvaluation');
 const accessibilityLevelEvaluation = require('./accessibilityLevelEvaluation');
 
 const evaluatePage = async (url, disabilityProfile) => {
-  const response = await request(url);
+  const document = await getPage(url);
 
-  let { barrierVerificationSteps, barrierElement } = await scanPage(response);
+  const results = await applyTests(document);
 
-  let barrierScores = barrierEvaluation(barrierVerificationSteps);
+  if (results) {
+    const { barrierVerificationSteps, barrierElementCount, barrierErrorCount } =
+      results;
 
-  let accessibilityLevel = accessibilityLevelEvaluation(
-    barrierScores,
-    disabilityProfile
-  );
+    let barrierScores = barrierEvaluation(barrierVerificationSteps);
 
-  let specificResults = [];
-  let barrierCount = 0;
-  let globalElementCount = 0;
-  let globalErrorCount = 0;
-  for (const barrier in barrierScores) {
-    let barrierData = {
-      test: barrier,
-      score: barrierScores[barrier],
-      element: barrierElement[barrier],
-    };
+    let accessibilityLevel = accessibilityLevelEvaluation(
+      barrierScores,
+      disabilityProfile
+    );
 
-    specificResults.push(barrierData);
+    let specificResults = [];
+    let barrierCount = 0;
+    let globalElementCount = 0;
+    let globalErrorCount = 0;
+    for (const barrier in barrierScores) {
+      let barrierData = {
+        test: barrier,
+        score: barrierScores[barrier],
+        elementCount: barrierElementCount[barrier],
+        errorCount: barrierErrorCount[barrier],
+      };
 
-    if (barrierElement[barrier] != null) {
-      barrierCount++;
-      globalElementCount += barrierElement[barrier].elementCount;
-      globalErrorCount += barrierElement[barrier].errorCount;
+      specificResults.push(barrierData);
+
+      if (barrierElementCount[barrier] != null) {
+        barrierCount++;
+        globalElementCount += barrierElementCount[barrier];
+        globalErrorCount += barrierErrorCount[barrier];
+      }
     }
+
+    console.log(
+      barrierVerificationSteps,
+      barrierCount,
+      barrierElementCount,
+      barrierErrorCount,
+      barrierScores,
+      accessibilityLevel
+    );
+
+    return {
+      specificResults,
+      globalScore: accessibilityLevel,
+      barrierCount,
+      globalElementCount,
+      globalErrorCount,
+    };
+  } else {
+    return null;
   }
-
-  console.log(
-    barrierVerificationSteps,
-    barrierCount,
-    barrierElement,
-    barrierScores,
-    accessibilityLevel
-  );
-
-  return {
-    specificResults,
-    globalScore: accessibilityLevel,
-    barrierCount,
-    globalElementCount,
-    globalErrorCount,
-  };
 };
 
 module.exports = evaluatePage;

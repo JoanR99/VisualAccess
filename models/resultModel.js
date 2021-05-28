@@ -9,13 +9,11 @@ const specificResultSchema = new Schema({
   score: {
     type: Number,
   },
-  element: {
-    elementCount: {
-      type: Number,
-    },
-    errorCount: {
-      type: Number,
-    },
+  elementCount: {
+    type: Number,
+  },
+  errorCount: {
+    type: Number,
   },
 });
 

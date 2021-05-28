@@ -2,7 +2,7 @@ const { reviewSchema, userSchema } = require('./schemas');
 const ExpressError = require('./utils/ExpressError');
 const Evaluation = require('./models/evaluationModel');
 const Page = require('./models/pageModel');
-// const Review = require('./models/review');
+const Review = require('./models/reviewModel');
 
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
@@ -12,15 +12,15 @@ module.exports.isLoggedIn = (req, res, next) => {
   next();
 };
 
-// module.exports.validateReview = (req, res, next) => {
-//   const { error } = reviewSchema.validate(req.body);
-//   if (error) {
-//     const msg = error.details.map((el) => el.message).join(',');
-//     throw new ExpressError(msg, 400);
-//   } else {
-//     next();
-//   }
-// };
+module.exports.validateReview = (req, res, next) => {
+  const { error } = reviewSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(',');
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
 
 module.exports.validateUser = (req, res, next) => {
   const { error } = userSchema.validate(req.body);
@@ -55,12 +55,12 @@ module.exports.pageExists = async (req, res, next) => {
   }
   next();
 };
-// module.exports.isReviewAuthor = async (req, res, next) => {
-//   const { id, reviewId } = req.params;
-//   const review = await Review.findById(reviewId);
-//   if (!review.author.equals(req.user._id)) {
-//     req.flash('error', '¡No tienes permiso para hacer esto!');
-//     return res.redirect(`/evaluation/${id}`);
-//   }
-//   next();
-// };
+module.exports.isReviewAuthor = async (req, res, next) => {
+  const { id, reviewId } = req.params;
+  const review = await Review.findById(reviewId);
+  if (!review.author.equals(req.user._id)) {
+    req.flash('error', '¡No tienes permiso para hacer esto!');
+    return res.redirect(`/evaluation/${id}`);
+  }
+  next();
+};

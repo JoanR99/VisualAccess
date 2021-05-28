@@ -4,7 +4,7 @@
   margin: 0.5em;
   padding: 0 0.5em;
   font: 900 2em/1.2 sans-serif;
-  background: #fff1e6;
+  background: #edecf2;
   z-index: 0;
   border-radius: 0.5em;
 }
@@ -29,12 +29,12 @@
   width: 90%;
   background-image: radial-gradient(
       circle,
-      #fff1e6 48%,
+      #edecf2 48%,
       transparent 50%,
       transparent 66%,
-      #fff1e6 68%
+      #edecf2 68%
     ),
-    linear-gradient(gainsboro 50%, #f17300 50%);
+    linear-gradient(gainsboro 50%, #ffc107 50%);
   background-size: 100% 100%, 95% 95%;
   background-position: center center;
   transform: rotate(0);

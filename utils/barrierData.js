@@ -31,6 +31,17 @@ const barrierData = {
       },
     ],
   },
+  H36: {
+    barrierName: 'Atributos "alt" en elementos "input" de tipo imagen.',
+    description:
+      'elemento(s) "input" de tipo imagen no especifican una alternativa de texto corto con el atributo "alt"',
+    successCriterion: [
+      {
+        name: 'Success Criterion 1.1.1: Non-text Content',
+        link: 'https://www.w3.org/WAI/WCAG21/Understanding/non-text-content',
+      },
+    ],
+  },
   H37: {
     barrierName: 'Atributos "alt" en imagenes.',
     description:
@@ -62,6 +73,21 @@ const barrierData = {
       {
         name: 'Success Criterion 4.1.2: Name, Role, Value',
         link: 'https://www.w3.org/WAI/WCAG21/Understanding/name-role-value',
+      },
+    ],
+  },
+  H46: {
+    barrierName: 'Utilizar elementos "noembed" con elementos "embed"',
+    description:
+      'elemento(s) "embed" no tiene(n) elemento(s) "noembed" para ofrecer contenido alternativo.',
+    successCriterion: [
+      {
+        name: 'Success Criterion 1.1.1: Non-text Content',
+        link: 'https://www.w3.org/WAI/WCAG21/Understanding/non-text-content',
+      },
+      {
+        name: 'Success Criterion 1.2.8: Media Alternative (Prerecorded)',
+        link: 'https://www.w3.org/WAI/WCAG21/Understanding/media-alternative-prerecorded',
       },
     ],
   },
@@ -110,17 +136,6 @@ const barrierData = {
       {
         name: 'Success Criterion 4.1.1: Parsing',
         link: 'https://www.w3.org/WAI/WCAG21/Understanding/parsing',
-      },
-    ],
-  },
-  H95: {
-    barrierName: 'Elementos "track" para subtitulos en elementos de "video".',
-    description:
-      'elemento(s) "video" no posee(n) un elemento "track" para subtitulos.',
-    successCriterion: [
-      {
-        name: 'Success Criterion 1.2.2: Captions (Prerecorded)',
-        link: 'https://www.w3.org/WAI/WCAG21/Understanding/captions-prerecorded',
       },
     ],
   },

@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const barierrEvaluation = (barrierVerificationSteps) => {
   let barrierScores = {};
   for (const barrier in barrierVerificationSteps) {
@@ -10,7 +12,7 @@ const barierrEvaluation = (barrierVerificationSteps) => {
       let p = barrierVerificationSteps[barrier][0].length - 1;
       let ep = [];
       for (let j = 0; j < barrierVerificationSteps[barrier].length; j++) {
-        ep.push(barrierVerificationSteps[barrier][j].filter((e, i) => i > 0));
+        ep.push(_.drop(barrierVerificationSteps[barrier][j]));
       }
       let elementsScoresSum = 0;
       for (let i = 0; i < ep.length; i++) {

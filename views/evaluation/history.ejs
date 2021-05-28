@@ -1,23 +1,67 @@
-<% layout('layouts/boilerplate') %>
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VisualAccess</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/stylesheets/showPage.css" />
+  </head>
+  <body class="d-flex flex-column">
+    <%- include('../partials/navbar') %> <%- include('../partials/flash') %>
 
-<h1>Historial</h1>
+    <div class="container mt-3">
+      <h1>Historial</h1>
 
-<main class="row d-flex flex-wrap justify-content-around">
-  <% for(let evaluation of evaluations){ %>
-  <div class="card mb-3 col-3 m-2 text-center">
-    <div class="card-body">
-      <h5 class="card-title"><%= evaluation.page.url %></h5>
-      <p class="card-title">Nivel: <%= evaluation.result.globalScore %>%</p>
-      <p class="card-title">
-        <small class="text-muted"><%= evaluation.profile %></small>
-      </p>
-      <p class="card-title">
-        <small class="text-muted"><%= evaluation.evaluationDate %></small>
-      </p>
-      <a href="/evaluation/<%= evaluation._id %> " class="btn btn-primary">
-        Ver evaluación
-      </a>
+      <main class="row g-2">
+        <% for(let evaluation of evaluations){ %>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card border-info text-center mb-3">
+            <div class="card-header bg-info">
+              <h5 class="card-title"><%= evaluation.page.url %></h5>
+            </div>
+            <div class="card-body">
+              <p class="card-title">
+                Nivel: <%= evaluation.result.globalScore %>%
+              </p>
+              <p class="card-title">
+                <small class="text-muted"><%= evaluation.profile %></small>
+              </p>
+              <p class="card-title">
+                <small class="text-muted"
+                  ><%= evaluation.evaluationDate %></small
+                >
+              </p>
+            </div>
+            <div class="card-footer border-info d-flex justify-content-center">
+              <a
+                href="/evaluation/<%= evaluation._id %> "
+                class="btn btn-sm btn-primary"
+              >
+                Ver evaluación
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <% } %>
+      </main>
     </div>
-  </div>
-  <% } %>
-</main>
+
+    <%- include('../partials/footer') %>
+
+    <script src="/scripts//manageLink.js"></script>
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

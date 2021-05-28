@@ -5,6 +5,7 @@ const evaluatePage = require('../utils/evaluatePage');
 const barrierData = require('../utils/barrierData');
 const formatDate = require('../utils/formatDate');
 const defineAccessibilityLevel = require('../utils/defineAccessibilityLevel');
+const createOrGetPage = require('../utils/createOrGetPage');
 
 module.exports.renderNewForm = (req, res) => {
   res.render('evaluation/newEvaluation');
@@ -13,56 +14,45 @@ module.exports.renderNewForm = (req, res) => {
 module.exports.createEvaluation = async (req, res, next) => {
   const { url, disabilityProfile } = req.body;
   const results = await evaluatePage(url, disabilityProfile);
-  if (!req.isAuthenticated()) {
-    let profile;
-    if (disabilityProfile == 'totalBlind') {
-      profile = 'Evaluación para ceguera total';
-    } else {
-      profile = 'Evaluación para ceguera parcial';
-    }
-    let today = new Date();
-    let evaluationDate = formatDate(today);
-    let accessibilityLevel = defineAccessibilityLevel(results.globalScore);
-    results.accessibilityLevel = accessibilityLevel;
-    req.flash('success', 'Se ha evaluado la página correctamente!');
-    res.render('evaluation/showEvaluation', {
-      evaluation: {
-        result: results,
-        page: { url },
-        profile,
-        evaluationDate,
-      },
-      barrierData,
-      currentUser: false,
-    });
-  } else {
-    const result = new Result(results);
-    await result.save();
-    const evaluation = new Evaluation();
-    evaluation.result = result._id;
-    evaluation.disabilityProfile = disabilityProfile;
-    evaluation.author = req.user._id;
 
-    const page = await Page.findOne({ url }, (err, page) => {
-      if (err) console.log(err);
-      if (page) {
-        return page;
+  const page = await createOrGetPage(url);
+
+  if (results) {
+    if (!req.isAuthenticated()) {
+      let profile;
+      if (disabilityProfile == 'totalBlind') {
+        profile = 'Evaluación para ceguera total';
       } else {
-        console.log('no se encontro la pagina');
+        profile = 'Evaluación para ceguera parcial';
       }
-    });
-
-    if (page) {
-      evaluation.page = page._id;
+      let today = new Date();
+      let evaluationDate = formatDate(today);
+      let accessibilityLevel = defineAccessibilityLevel(results.globalScore);
+      results.accessibilityLevel = accessibilityLevel;
+      return res.render('evaluation/showEvaluation', {
+        evaluation: {
+          result: results,
+          profile,
+          evaluationDate,
+        },
+        page,
+        barrierData,
+        currentUser: false,
+      });
     } else {
-      const newPage = new Page({ url });
-      await newPage.save();
-      evaluation.page = newPage._id;
+      const result = new Result(results);
+      await result.save();
+      const evaluation = new Evaluation();
+      evaluation.result = result._id;
+      evaluation.disabilityProfile = disabilityProfile;
+      evaluation.author = req.user._id;
+      evaluation.page = page._id;
+      await evaluation.save();
+      return res.redirect(`/evaluation/${evaluation._id}`);
     }
-
-    await evaluation.save();
-    req.flash('success', 'Se ha evaluado la página correctamente!');
-    res.redirect(`/evaluation/${evaluation._id}`);
+  } else {
+    req.flash('error', 'Ha ocurrido un error al intentar evaluar la página.');
+    return res.redirect('/evaluation/new');
   }
 };
 
@@ -75,16 +65,20 @@ module.exports.deleteEvaluation = async (req, res) => {
 
 module.exports.showEvaluation = async (req, res) => {
   const { id } = req.params;
-  const evaluation = await Evaluation.findById(id)
-    .populate('result')
-    .populate('page');
+  const evaluation = await Evaluation.findById(id).populate('result');
+
+  const page = await Page.findById(evaluation.page._id).populate({
+    path: 'reviews',
+    populate: {
+      path: 'author',
+    },
+  });
 
   if (!evaluation) {
     req.flash('error', '¡No se pudo encontrar esa evaluación!');
     return res.redirect('/evaluation/new');
   }
-  console.log(evaluation);
-  res.render('evaluation/showEvaluation', { evaluation, barrierData });
+  res.render('evaluation/showEvaluation', { evaluation, page, barrierData });
 };
 
 module.exports.showSpecificHistory = async (req, res) => {
@@ -99,7 +93,6 @@ module.exports.showSpecificHistory = async (req, res) => {
     return res.redirect('/');
   }
   if (evaluations) {
-    console.log(evaluations);
     return res.render('evaluation/history', { evaluations });
   }
 };
@@ -115,7 +108,6 @@ module.exports.showHistory = async (req, res) => {
     return res.redirect('/');
   }
   if (evaluations) {
-    console.log(evaluations);
     return res.render('evaluation/history', { evaluations });
   }
 };
